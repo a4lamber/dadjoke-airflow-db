@@ -1,0 +1,17 @@
+
+.venv
+.env
+
+.DS_store
+
+
+
+# Airflow logs
+logs/*
+
+# Airflow compiled DAGs
+*.pyc
+*.pyo
+__pycache__/
+
+
