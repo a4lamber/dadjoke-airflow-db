@@ -62,6 +62,7 @@ x-airflow-common:
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
   image: ${AIRFLOW_IMAGE_NAME:-extending_airflow:latest}
+  # image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.6.0}
   # build: .
   environment:
     &airflow-common-env
@@ -85,10 +86,13 @@ x-airflow-common:
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
+  # map local directory to your container
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+    - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow
+    
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -133,6 +137,8 @@ services:
     command: webserver
     ports:
       - "8080:8080"
+    expose:
+      - 587
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 30s
@@ -144,10 +150,15 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-
+    # add volume to the websever container
+    # volumes:
+    #     - ./config/eat.cfg:/opt/airflow/eat.cfg
+        
   airflow-scheduler:
     <<: *airflow-common
     command: scheduler
+    expose:
+      - 587
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
       interval: 30s
@@ -159,6 +170,9 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    # volumes:
+    #     - ./config/airflow.cfg:/opt/airflow/airflow.cfg
+    
 
   # airflow-worker:
   #   <<: *airflow-common

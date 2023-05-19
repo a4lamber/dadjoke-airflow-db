@@ -23,6 +23,7 @@ VALUES ('John', 'Doe', 'johndoe@example.com', 'Acme Inc.', '123 Main St', 'Anyto
 INSERT INTO customer (first_name, last_name, email, company, street, city, state, zip, phone, birth_date, sex, date_entered)
 VALUES ('Jane', 'Doe', 'janedoe@example.com', 'Acme Inc.', '123 Main St', 'Anytown', 'CA', 12345, '555-555-1212', '1970-01-01', 'F', NOW());
 
+-- delete from tables
 
 DELETE FROM customer WHERE first_name = 'John' AND last_name = 'Doe';
 DELETE FROM customer WHERE first_name = 'Jane' AND last_name = 'Doe';

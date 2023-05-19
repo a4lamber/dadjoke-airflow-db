@@ -4,8 +4,6 @@
 
 .DS_store
 
-
-
 # Airflow logs
 logs/*
 
@@ -14,4 +12,5 @@ logs/*
 *.pyo
 __pycache__/
 
-
+# commone out the config dir
+config/*
