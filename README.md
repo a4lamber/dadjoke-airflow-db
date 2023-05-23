@@ -1,50 +1,71 @@
 
+<img align="left" width="100" src=./drawings/3_airflow_logo.excalidraw.png />
 
+# Dadjoke x Airflow 
 
-# Project Name
+Daily dad joke scheduled by airflow to your mailbox!
 
-This project uses Airflow and the Dad Joke API to send out daily emails to users.
+---
 
-## Overview
-
+## Motivation
 The purpose of this project is to provide users with a daily dose of humor via email. The project leverages Airflow to schedule and send emails, and the Dad Joke API to retrieve random jokes. The project is designed to be flexible and easy to configure, allowing users to specify the email recipients, email subject, and other parameters.
+
+
+![](./drawings/2_airflow_datajoke.excalidraw.png)
+
+
+
 
 ## Installation
 
-To use this project, you will need to have Airflow installed. You can install Airflow using `pip`:
+To use this project, you will need to set up `airflow` with docker. [Reference here](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html).
 
-```
-pip install apache-airflow
+If you follow along the airflow-docker installation, you will have a [docker-compose.yaml](./docker-compose.yaml) file in your project directory.
 
-```
-
-The project also requires the `requests` library to interact with the Dad Joke API:
-
-```
-pip install requests
-
+Then you need to build the Docker image
+```bash
+# build the image
+docker image build . --tag extending_airflow:latest
 ```
 
-## Configuration
+Next step is to modify the `docker-compose.yaml` file to use your own image.
 
-To configure the project, you will need to edit the `dag.py` file. The file contains a DAG definition that specifies the email schedule and recipients, as well as the email content. You can customize the DAG by modifying the `default_args` and `send_email` tasks.
+```bash
+# before
+image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.6.1}
 
+# modify it to 
+image: ${AIRFLOW_IMAGE_NAME:-extending_airflow:latest}
+```
+
+After you set it all up, run the following commands
+```bash
+# set up metastore database for airflow (defaults to Postgres)
+docker compose up airflow-init
+
+# run the server in detached mode
+docker compose up -d
+```
 
 
 
 > Note: it's good practice to use `host.docker.internal` instead of your machine's internal ip address. Also `127.0.0.1` is a special address called loopback address that points to the local machine. Any traffic sent to this address is routed back to the same machine.
 
 
+
+
 ## Usage
 
-After configuring the DAG, you can run it using the Airflow CLI:
+After configuring the DAG, you could open up your favorite browser and type
 
+```bash
+# open airflow webserver with GUI
+localhost:8080
 ```
-airflow dags trigger send_email
 
-```
+You should see a dag called `dad_joke_v_production` and the source code is [daily_dad_joke.py](./dags/daily_dad_joke.py). Have fun!
 
-This will trigger the DAG and send out the daily email.
+This will trigger the DAG and send out the daily email on.
 
 ## Contributing
 

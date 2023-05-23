@@ -14,3 +14,7 @@ __pycache__/
 
 # commone out the config dir
 config/*
+
+airflow.db
+
+vault/*
