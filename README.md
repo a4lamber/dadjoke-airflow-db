@@ -49,7 +49,7 @@ docker compose up -d
 
 
 
-> Note: it's good practice to use `host.docker.internal` instead of your machine's internal ip address. Also `127.0.0.1` is a special address called loopback address that points to the local machine. Any traffic sent to this address is routed back to the same machine.
+> Note: it's good practice to use `host.docker.internal` instead of your machine's internal ip address. 
 
 
 
